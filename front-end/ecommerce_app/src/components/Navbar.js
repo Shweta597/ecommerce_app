@@ -6,12 +6,13 @@ import {
 import MenuIcon from '@mui/icons-material/Menu';
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
 import axios from 'axios';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 const Navbar = () => {
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [categories, setCategories] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
+  const navigate = useNavigate();
 
   useEffect(() => {
     axios.get('http://localhost:8080/api/categories')
@@ -20,8 +21,9 @@ const Navbar = () => {
   }, []);
 
   const handleSearch = () => {
-    console.log("Search for:", searchTerm);
-    // You can navigate or filter products using searchTerm here
+    if (searchTerm.trim()) {
+      navigate(`/search/${searchTerm}`);
+    }
   };
 
   return (
@@ -33,7 +35,7 @@ const Navbar = () => {
             <IconButton edge="start" color="inherit" onClick={() => setDrawerOpen(true)}>
               <MenuIcon />
             </IconButton>
-            <Typography variant="h6" component="div">
+            <Typography variant="h6" component={Link} to="/" sx={{ color: 'white', textDecoration: 'none' }}>
               Ecommerce
             </Typography>
           </Box>
@@ -65,9 +67,17 @@ const Navbar = () => {
               Categories
             </Typography>
             {categories.map((category) => (
-              <ListItem button key={category.id}>
-                <ListItemText primary={category.name} />
-              </ListItem>
+            <ListItem
+                button
+                key={category.id}
+                component={Link}
+                to={`/category/${category.categoryName}`}
+            >
+                <ListItemText
+                primary={category.categoryName}
+                primaryTypographyProps={{ style: { color: '#333' } }}
+                />
+            </ListItem>
             ))}
           </List>
         </Box>

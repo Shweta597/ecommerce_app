@@ -4,6 +4,7 @@ import com.shwetashaw.ecommerce_app.model.Product;
 import com.shwetashaw.ecommerce_app.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.http.ResponseEntity;
 
 import java.util.List;
 
@@ -38,5 +39,11 @@ public class ProductController {
     @DeleteMapping("/{id}")
     public void deleteProduct(@PathVariable Long id) {
         productService.deleteProduct(id);
+    }
+
+    @GetMapping("/category/{categoryName}")
+    public ResponseEntity<List<Product>> getProductsByCategory(@PathVariable String categoryName) {
+        List<Product> products = productService.getProductsByCategory(categoryName);
+        return ResponseEntity.ok(products);
     }
 }
