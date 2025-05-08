@@ -13,15 +13,17 @@ const CategoryProducts = () => {
       .catch(error => console.error("Error fetching category products:", error));
   }, [categoryName]);
 
-  return (
-    <div style={{ padding: '2rem' }}>
-      <h2>Products in {categoryName}</h2>
-      <div style={{ display: 'flex', flexWrap: 'wrap', gap: '1rem' }}>
-        {products.map(product => (
-          <ProductCard key={product.id} product={product} />
-        ))}
-      </div>
-    </div>
+  return React.createElement(
+    'div',
+    { style: { padding: '2rem' } },
+    React.createElement('h2', null, `Products in ${categoryName}`),
+    React.createElement(
+      'div',
+      { style: { display: 'flex', flexWrap: 'wrap', gap: '1rem' } },
+      products.map(product =>
+        React.createElement(ProductCard, { key: product.id, product: product })
+      )
+    )
   );
 };
 
