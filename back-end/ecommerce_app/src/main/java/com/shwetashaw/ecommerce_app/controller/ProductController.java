@@ -46,4 +46,9 @@ public class ProductController {
         List<Product> products = productService.getProductsByCategory(categoryName);
         return ResponseEntity.ok(products);
     }
+
+    @GetMapping("/search")
+    public List<Product> searchProducts(@RequestParam String keyword) {
+        return productService.searchProducts(keyword);
+    }
 }

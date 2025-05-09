@@ -8,7 +8,7 @@ import {
 import { useNavigate } from 'react-router-dom';
 import { useCart } from '../context/CartContext'; // Import your cart context
 
-const HomePage = () => {
+const Home = () => {
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
@@ -100,4 +100,4 @@ const HomePage = () => {
   );
 };
 
-export default HomePage;
+export default Home;

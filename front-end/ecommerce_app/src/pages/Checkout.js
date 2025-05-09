@@ -4,7 +4,7 @@ import {
 } from '@mui/material';
 import { useCart } from '../context/CartContext';
 
-const CheckoutPage = () => {
+const Checkout = () => {
   const { cartItems, totalAmount } = useCart();
 
   const handlePurchase = () => {
@@ -67,4 +67,4 @@ const CheckoutPage = () => {
   );
 };
 
-export default CheckoutPage;
+export default Checkout;

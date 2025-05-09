@@ -15,6 +15,7 @@ const Navbar = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
+    // Fetch categories for the drawer
     axios.get('http://localhost:8080/api/categories')
       .then(response => setCategories(response.data))
       .catch(error => console.error("Error fetching categories:", error));
@@ -22,6 +23,7 @@ const Navbar = () => {
 
   const handleSearch = () => {
     if (searchTerm.trim()) {
+      // Navigate to the search page with the search term as a parameter
       navigate(`/search/${searchTerm}`);
     }
   };
@@ -60,6 +62,7 @@ const Navbar = () => {
         </Toolbar>
       </AppBar>
 
+      {/* Drawer for Categories */}
       <Drawer anchor="left" open={drawerOpen} onClose={() => setDrawerOpen(false)}>
         <Box sx={{ width: 250 }} role="presentation" onClick={() => setDrawerOpen(false)}>
           <List>
@@ -67,17 +70,17 @@ const Navbar = () => {
               Categories
             </Typography>
             {categories.map((category) => (
-            <ListItem
+              <ListItem
                 button
                 key={category.id}
                 component={Link}
                 to={`/category/${category.categoryName}`}
-            >
+              >
                 <ListItemText
-                primary={category.categoryName}
-                primaryTypographyProps={{ style: { color: '#333' } }}
+                  primary={category.categoryName}
+                  primaryTypographyProps={{ style: { color: '#333' } }}
                 />
-            </ListItem>
+              </ListItem>
             ))}
           </List>
         </Box>

@@ -13,7 +13,7 @@ const Layout = ({ children }) => {
       </Box>
       <Footer />
     </Box>
-  );
+  ); 
 };
 
 export default Layout;
