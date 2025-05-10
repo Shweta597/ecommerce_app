@@ -1,34 +1,38 @@
-// src/components/HomePage.js
-import React, { useEffect, useState, useContext } from 'react';
+import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import {
   Card, CardContent, CardMedia, Typography,
   Grid, Box, CircularProgress, Button
 } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
-import { useCart } from '../context/CartContext'; // Import your cart context
+import { useCart } from '../context/CartContext';
 
 const Home = () => {
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [page, setPage] = useState(0);
+  const [totalPages, setTotalPages] = useState(0);
+
   const navigate = useNavigate();
   const { addToCart } = useCart();
 
   useEffect(() => {
-    axios.get('http://localhost:8080/api/products')
+    setLoading(true);
+    axios.get(`http://localhost:8080/api/products/paginated?page=${page}&size=3`)
       .then(response => {
-        setProducts(response.data);
+        setProducts(response.data.content);
+        setTotalPages(response.data.totalPages);
         setLoading(false);
       }).catch(error => {
         console.error("Error fetching products:", error);
         setLoading(false);
       });
-  }, []);
+  }, [page]);
 
   const handleAddToCart = (e, product) => {
     e.stopPropagation();
-    addToCart(product); // Add product to cart
-    navigate('/cart');  // Redirect to cart
+    addToCart(product);
+    navigate('/cart');
   };
 
   if (loading) {
@@ -44,6 +48,7 @@ const Home = () => {
       <Typography variant="h4" gutterBottom textAlign="center">
         Product Catalog
       </Typography>
+
       <Grid container spacing={3}>
         {products.map(product => (
           <Grid item xs={12} sm={6} md={4} key={product.id}>
@@ -96,6 +101,29 @@ const Home = () => {
           </Grid>
         ))}
       </Grid>
+
+      {/* Pagination Controls */}
+      <Box sx={{ mt: 4, textAlign: 'center' }}>
+        <Button
+          variant="outlined"
+          disabled={page === 0}
+          onClick={() => setPage(page - 1)}
+          sx={{ mr: 2 }}
+        >
+          Previous
+        </Button>
+        <Typography variant="body1" component="span">
+          Page {page + 1} of {totalPages}
+        </Typography>
+        <Button
+          variant="outlined"
+          disabled={page + 1 >= totalPages}
+          onClick={() => setPage(page + 1)}
+          sx={{ ml: 2 }}
+        >
+          Next
+        </Button>
+      </Box>
     </Box>
   );
 };
