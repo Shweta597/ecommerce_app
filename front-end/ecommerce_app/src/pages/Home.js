@@ -18,7 +18,7 @@ const Home = () => {
 
   useEffect(() => {
     setLoading(true);
-    axios.get(`http://localhost:8080/api/products/paginated?page=${page}&size=3`)
+    axios.get(`http://localhost:8080/api/products?page=${page}&size=3`)
       .then(response => {
         setProducts(response.data.content);
         setTotalPages(response.data.totalPages);

@@ -1,12 +1,14 @@
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import ProductList from './pages/Home';  
+import ProductList from './pages/Home';
 import ProductDetails from './pages/ProductDetails';
 import ShoppingCart from './components/ShoppingCart';
 import Layout from './components/Layout';
 import { CartProvider } from './context/CartContext';
 import CategoryProducts from './components/CategoryProducts';
-import SearchResults from './pages/SearchResults';  
+import SearchResults from './pages/SearchResults';
+import ProductForm from './pages/ProductForm';  // Import the ProductUpload page
+import Footer from './components/Footer';  // Import the Footer component
 
 const App = () => {
   return (
@@ -19,8 +21,10 @@ const App = () => {
             <Route path="/cart" element={<ShoppingCart />} />
             <Route path="/category/:categoryName" element={<CategoryProducts />} />
             <Route path="/search/:searchTerm" element={<SearchResults />} />  {/* Search Results Route */}
+            <Route path="/upload-product" element={<ProductForm />} />  {/* Add the product upload route */}
           </Routes>
         </Layout>
+        
       </Router>
     </CartProvider>
   );

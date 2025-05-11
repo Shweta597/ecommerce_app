@@ -17,7 +17,7 @@ const SearchResults = () => {
 
   useEffect(() => {
     setLoading(true);
-    axios.get(`http://localhost:8080/api/products/paginated?page=${page}&size=1&keyword=${searchTerm}`)
+    axios.get(`http://localhost:8080/api/products/search?keyword=${searchTerm}&page=${page}&size=1`)
       .then(response => {
         setProducts(response.data.content);
         setTotalPages(response.data.totalPages);

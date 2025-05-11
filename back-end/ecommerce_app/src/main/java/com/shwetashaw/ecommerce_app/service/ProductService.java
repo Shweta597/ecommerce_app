@@ -8,20 +8,21 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
+import com.cloudinary.Cloudinary;
+import com.cloudinary.utils.ObjectUtils;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.io.IOException;
+import java.util.Map;
 
 @Service
 public class ProductService {
 
     @Autowired
-    private ProductRepository productRepository;
+    private Cloudinary cloudinary;
 
-    /**
-     * Fetch all products from the database.
-     */
-    public List<Product> getAllProducts() {
-        return productRepository.findAll();
-    }
+    @Autowired
+    private ProductRepository productRepository;
 
     /**
      * Fetch a single product by its ID.
@@ -46,20 +47,6 @@ public class ProductService {
     }
 
     /**
-     * Get all products that belong to a specific category.
-     */
-    public List<Product> getProductsByCategory(String categoryName) {
-        return productRepository.findByCategoryCategoryName(categoryName);
-    }
-
-    /**
-     * Search for products by a keyword in name or description.
-     */
-    public List<Product> searchProducts(String keyword) {
-        return productRepository.searchByKeyword(keyword);
-    }
-
-    /**
      * Get paginated list of all products.
      */
     public Page<Product> getProducts(int page, int size) {
@@ -81,5 +68,10 @@ public class ProductService {
     public Page<Product> searchProducts(String keyword, int page, int size) {
         Pageable pageable = PageRequest.of(page, size);
         return productRepository.searchByKeyword(keyword, pageable);
+    }
+
+    public String uploadImage(MultipartFile imageFile) throws IOException {
+        Map<?, ?> uploadResult = cloudinary.uploader().upload(imageFile.getBytes(), ObjectUtils.emptyMap());
+        return (String) uploadResult.get("secure_url");
     }
 }

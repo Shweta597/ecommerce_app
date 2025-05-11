@@ -7,8 +7,19 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.HttpStatus;
 import org.springframework.data.domain.Page;
+import com.cloudinary.Cloudinary;
+import com.cloudinary.utils.ObjectUtils;
 
-import java.util.List;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.io.IOException;
+import java.util.Map;
+
+import org.springframework.http.MediaType;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestPart;
+import org.springframework.web.bind.annotation.RestController;
+
 
 @RestController
 @RequestMapping("/api/products")
@@ -16,39 +27,46 @@ import java.util.List;
 public class ProductController {
 
     @Autowired
+    private Cloudinary cloudinary;
+
+    @Autowired
     private ProductService productService;
 
     /**
-     * Get all products (non-paginated).
-     * Endpoint: GET /api/products
+     * Get all products with pagination.
+     * Endpoint: GET /api/products?page=0&size=10
      */
     @GetMapping
-    public ResponseEntity<List<Product>> getAllProducts() {
-        List<Product> products = productService.getAllProducts();
+    public ResponseEntity<Page<Product>> getAllProducts(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size) {
+        Page<Product> products = productService.getProducts(page, size);
         return ResponseEntity.ok(products);
     }
 
     /**
-     * Get paginated products (optional support for search and category).
-     * Endpoint: GET /api/products/paginated?page=0&size=10
+     * Get products by category with pagination.
+     * Endpoint: GET /api/products/category/{categoryName}?page=0&size=10
      */
-    @GetMapping("/paginated")
-    public ResponseEntity<Page<Product>> getPaginatedProducts(
+    @GetMapping("/category/{categoryName}")
+    public ResponseEntity<Page<Product>> getProductsByCategory(
+            @PathVariable String categoryName,
             @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "10") int size,
-            @RequestParam(required = false) String keyword,
-            @RequestParam(required = false) String categoryName) {
+            @RequestParam(defaultValue = "10") int size) {
+        Page<Product> products = productService.getProductsByCategory(categoryName, page, size);
+        return ResponseEntity.ok(products);
+    }
 
-        Page<Product> products;
-
-        if (keyword != null && !keyword.isEmpty()) {
-            products = productService.searchProducts(keyword, page, size);
-        } else if (categoryName != null && !categoryName.isEmpty()) {
-            products = productService.getProductsByCategory(categoryName, page, size);
-        } else {
-            products = productService.getProducts(page, size);
-        }
-
+    /**
+     * Search for products with pagination.
+     * Endpoint: GET /api/products/search?keyword=xyz&page=0&size=10
+     */
+    @GetMapping("/search")
+    public ResponseEntity<Page<Product>> searchProducts(
+            @RequestParam String keyword,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size) {
+        Page<Product> products = productService.searchProducts(keyword, page, size);
         return ResponseEntity.ok(products);
     }
 
@@ -92,23 +110,20 @@ public class ProductController {
         return ResponseEntity.noContent().build();
     }
 
-    /**
-     * Get products by category (non-paginated).
-     * Endpoint: GET /api/products/category/{categoryName}
-     */
-    @GetMapping("/category/{categoryName}")
-    public ResponseEntity<List<Product>> getProductsByCategory(@PathVariable String categoryName) {
-        List<Product> products = productService.getProductsByCategory(categoryName);
-        return ResponseEntity.ok(products);
-    }
+    @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<Product> createProduct(
+            @RequestPart("product") Product product,
+            @RequestPart("image") MultipartFile imageFile) {
 
-    /**
-     * Search for products (non-paginated).
-     * Endpoint: GET /api/products/search?keyword=xyz
-     */
-    @GetMapping("/search")
-    public ResponseEntity<List<Product>> searchProducts(@RequestParam String keyword) {
-        List<Product> products = productService.searchProducts(keyword);
-        return ResponseEntity.ok(products);
+            try {
+                String imageUrl = productService.uploadImage(imageFile);
+                product.setImageUrl(imageUrl);
+        
+                Product savedProduct = productService.saveProduct(product);
+                return new ResponseEntity<>(savedProduct, HttpStatus.CREATED);
+            } catch (IOException e) {
+                // Log the error if needed
+                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+            }
     }
 }

@@ -1,12 +1,16 @@
-// src/components/Footer.js
 import React from 'react';
-import { Box, Typography } from '@mui/material';
+import { Link } from 'react-router-dom';
 
 const Footer = () => {
   return (
-    <Box sx={{ backgroundColor: '#1976d2', color: 'white', py: 2, textAlign: 'center' }}>
-      <Typography variant="body2">© 2025 Ecommerce App. All rights reserved.</Typography>
-    </Box>
+    <footer style={{ padding: "20px", textAlign: "center" }}>
+      <p>© 2025 Your Ecommerce Site</p>
+      <Link to="/upload-product">
+        <button style={{ padding: "10px 20px", fontSize: "16px" }}>
+          Upload New Product
+        </button>
+      </Link>
+    </footer>
   );
 };
 
