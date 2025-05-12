@@ -7,8 +7,9 @@ import Layout from './components/Layout';
 import { CartProvider } from './context/CartContext';
 import CategoryProducts from './components/CategoryProducts';
 import SearchResults from './pages/SearchResults';
-import ProductForm from './pages/ProductForm';  // Import the ProductUpload page
-import Footer from './components/Footer';  // Import the Footer component
+import ProductForm from './pages/ProductForm';
+import Footer from './components/Footer';
+import Login from './pages/Login'; 
 
 const App = () => {
   return (
@@ -20,11 +21,11 @@ const App = () => {
             <Route path="/product/:id" element={<ProductDetails />} />
             <Route path="/cart" element={<ShoppingCart />} />
             <Route path="/category/:categoryName" element={<CategoryProducts />} />
-            <Route path="/search/:searchTerm" element={<SearchResults />} />  {/* Search Results Route */}
-            <Route path="/upload-product" element={<ProductForm />} />  {/* Add the product upload route */}
+            <Route path="/search/:searchTerm" element={<SearchResults />} />
+            <Route path="/upload-product" element={<ProductForm />} />
+            <Route path="/login" element={<Login />} /> 
           </Routes>
         </Layout>
-        
       </Router>
     </CartProvider>
   );

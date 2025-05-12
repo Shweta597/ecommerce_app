@@ -32,12 +32,14 @@ build/
 ### VS Code ###
 .vscode/
 
-# Ignore Firebase service account credentials
-back-end/ecommerce_app/src/main/resources/firebase-service-account.json
 
 # Ignore all JSON files in the resources folder
 back-end/ecommerce_app/src/main/resources/*.json
 
 **/application.properties
+
+# Ignore Firebase service account credentials
+src/main/resources/firebase/serviceAccountKey.json
+
 
 .DS_Store

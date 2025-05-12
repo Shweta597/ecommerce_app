@@ -5,6 +5,7 @@ import {
 } from '@mui/material';
 import MenuIcon from '@mui/icons-material/Menu';
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
+import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import axios from 'axios';
 import { Link, useNavigate } from 'react-router-dom';
 
@@ -23,7 +24,6 @@ const Navbar = () => {
 
   const handleSearch = () => {
     if (searchTerm.trim()) {
-      // Navigate to the search page with the search term as a parameter
       navigate(`/search/${searchTerm}`);
     }
   };
@@ -58,6 +58,11 @@ const Navbar = () => {
             <IconButton color="inherit" component={Link} to="/cart" sx={{ ml: 1 }}>
               <ShoppingCartIcon />
             </IconButton>
+
+            {/* Login Button */}
+            <Button color="inherit" component={Link} to="/login" startIcon={<AccountCircleIcon />}>
+              Login
+            </Button>
           </Box>
         </Toolbar>
       </AppBar>
